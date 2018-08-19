@@ -16,14 +16,16 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     /// middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     services.register(middlewares)
-
+    
+    //Configure IP And Port
+    let serverConfiure = NIOServerConfig.default(hostname: "0.0.0.0", port: 8080)
+    services.register(serverConfiure)
+    
+    
     /// Configure a PostgreSQL database
     var databases = DatabasesConfig()
-    
     let databaseConfig = PostgreSQLDatabaseConfig(hostname: "localhost", username: "michel", database: "todoDemo1")
-    
     let dataBase = PostgreSQLDatabase(config: databaseConfig)
-
     databases.add(database: dataBase, as: .psql)
     services.register(databases)
 
